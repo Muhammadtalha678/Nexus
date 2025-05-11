@@ -12,7 +12,12 @@ const register_validation = joi.object({
                 'string.empty': 'Email is required',
                 'string.email': 'Please provide a valid email address',
                 'any.required': 'Email is required',
-            }),
+        }),
+        role:joi.string().valid('entrepreneur','investor').required().messages({
+            'any.only': 'Role must be either entrepreneur or investor',
+            'string.empty': 'Role is required',
+            'any.required': 'Role is required',
+        }),
         password: joi.string().min(8).required()
         .messages({
                 'string.empty': 'Password is required',
