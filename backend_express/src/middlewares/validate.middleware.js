@@ -1,6 +1,6 @@
 import { sendResponse } from "../lib/helpers/sendResponse.js";
 
-const validate_request = (validationSchema) => (req, res, next) => {
+export const validate_request = (validationSchema) => (req, res, next) => {
     const { error } = validationSchema.validate(req.body, { abortEarly: false })//means sb aik sath validate
     print("error joi" ,error)
     if (error) {
