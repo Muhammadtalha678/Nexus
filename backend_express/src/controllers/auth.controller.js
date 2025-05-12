@@ -61,6 +61,37 @@ const verify_email_controller = async (req, res) => {
     }
 }
 
+const resend_email_controller = async (req, res) => {
+    try {
+        let { email } = req.body
+        // find user
+                const findUser = await UserModel.findOne({email})
+                if (!findUser) {
+                    return sendResponse(res,401,true,{email:"User not found"},null)
+        }
+        if (findUser.isVerified) return sendResponse(res,401,true,{general:"User already verified"},null) 
+        // 6-digit OTP generate karna
+        const verificationToken = Math.floor(100000 + Math.random() * 900000).toString(); 
+        
+        findUser.verificationToken = verificationToken;
+        findUser.otpExpiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiration
+        try {
+                    await send_verification_mail(email,verificationToken)
+                    
+                } catch (emailError) {
+                    // Rollback user creation if email sending fails
+                    // await UserModal.findByIdAndDelete(newUSer._id)
+                    return sendResponse(res, 500, true, { general: "Failed to send verification email. Please try again." }, null);
+        }
+        await findUser.save();
+                
+                                return sendResponse(res, 200, false,{}, {message:"OTP resend successfully"});
+
+    } catch (error) {
+        return sendResponse(res,500,true,{ general: error.message },null)
+    }
+} 
+
 const login_controller = async (req, res) => {
     try {
         const { email, password } = req.body
@@ -80,4 +111,4 @@ const login_controller = async (req, res) => {
         return sendResponse(res,500,true,{ general: error.message },null)
     }
 }
-export {register_controller,verify_email_controller,login_controller}
+export {register_controller,verify_email_controller,login_controller,resend_email_controller}
