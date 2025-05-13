@@ -7,8 +7,6 @@ import Register from './pages/register'
 import Login from './pages/login'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <Routes>
       <Route path='/register' element={<Register/>} />
