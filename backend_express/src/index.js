@@ -57,16 +57,16 @@ process.on('uncaughtException', (err) => {
     });
   });
 
-  server.listen(env_config.port, () => {
-      console.log("app running on port "+env_config.port);              
-  })
-// connectDb()
-// .then(() => {
-//       server.listen(env_config.port, () => {
-//           console.log("app running on port "+env_config.port);              
-//       })
-//     })
-//     .catch((e) => {
-//         console.log("Failed to connect DB", error);
+  // server.listen(env_config.port, () => {
+  //     console.log("app running on port "+env_config.port);              
+  // })
+connectDb()
+.then(() => {
+      server.listen(env_config.port, () => {
+          console.log("app running on port "+env_config.port);              
+      })
+    })
+    .catch((e) => {
+        console.log("Failed to connect DB", error);
         
-//     })
+    })
