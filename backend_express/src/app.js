@@ -7,13 +7,13 @@ import http from 'http'
 import cors from 'cors'
 const app = express()
 app.use(cors({
-    origin:['http://127.0.0.1:5500','http://localhost:5173/']
+    origin:['http://127.0.0.1:5500','http://localhost:5173']
 }))
+app.use(express.json())
 app.get('/', (req,res) => {
     return res.send("Hello World")
 })
 
-app.use(express.json())
 
 app.use('/api/auth',AuthRouter)
 
