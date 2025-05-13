@@ -44,7 +44,7 @@ const verify_email_controller = async (req, res) => {
         if (!find_user) {
             return sendResponse(res,401,true,{email:"User not found"},null)
         }
-
+        if(find_user.isVerified) return sendResponse(res,400,true,{general:"User already verified"},null)
         // if (find_user.otpExpiresAt < Date.now()) throw new Error("OTP has expired");
         if (find_user.otpExpiresAt < Date.now()) return sendResponse(res, 400, true, { general: "OTP has expired" }, null);
         
