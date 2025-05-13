@@ -10,7 +10,5 @@ export const AppRoutes = {
     register: BASE_URL + "api/auth/register",
     verifyEmail: BASE_URL + "api/auth/verify-email",
     resendEmail: BASE_URL + "api/auth/resend-email",
-    addTask: BASE_URL + "task",
-    getTask: BASE_URL + "task",
-    myInfo: BASE_URL + "user/myInfo",
+    myInfo: BASE_URL + "api/user/myInfo",
 }
