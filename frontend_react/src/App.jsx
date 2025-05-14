@@ -8,6 +8,7 @@ import EntrepreneurDashboard from './pages/dashboard/entrepreneur'
 import VerifyEmail from './pages/verify-email'
 import {useAuth} from './context/Authcontext'
 import NotFound from './components/not-found'
+import Profile from './pages/profile/profile'
 function App() {
   const {user} = useAuth()
   // console.log(user);
@@ -24,9 +25,11 @@ function App() {
        {/* Protected Dashboard Routes */}
       <Route element={user? <DashboardLayout /> : <Navigate to={'/login'}/>}>
         <Route path="/dashboard" element={getDashboardRedirect()} />
-        
-       <Route path="/dashboard/investor" element={user?.role === 'investor' ? <InvestorDashboard /> : <Navigate to="/dashboard" />} />
-       <Route path="/dashboard/entrepreneur" element={user?.role === 'entrepreneur' ? <EntrepreneurDashboard /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard/investor" element={user?.role === 'investor' ? <InvestorDashboard /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard/entrepreneur" element={user?.role === 'entrepreneur' ? <EntrepreneurDashboard /> : <Navigate to="/dashboard" />} />
+
+        {/* Protected profile Routes */}
+        <Route path='/profile' element={<Profile/>} />
       </Route>
       <Route path='*' element={<NotFound/>} />
    </Routes>
