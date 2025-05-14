@@ -60,7 +60,7 @@ const Sidebar = () => {
           </div>
           <div className="ml-3">
             <p className="font-medium">User Name</p>
-            <p className="text-sm text-blue-300 capitalize">{user.role}</p>
+            <p className="text-sm text-blue-300 capitalize">{user.name}</p>
           </div>
         </div>
       </div>
