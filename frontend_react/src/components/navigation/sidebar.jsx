@@ -1,31 +1,30 @@
 import { useState } from 'react';
 import { Link,useLocation} from 'react-router';
-
+import {useAuth} from '../../context/Authcontext'
 /**
  * Sidebar component for the dashboard layout
  * Contains navigation links for both investor and entrepreneur dashboards
  */
 const Sidebar = () => {
-  const [userType, setUserType] = useState('investor'); // This would come from auth context in a real app
   const location = useLocation();
-  
+  const {user} = useAuth()
   // Determine active state based on current path
   const isActive = (path) => {
     return location.pathname.includes(path) ? 'bg-blue-700' : '';
   };
 
   // Navigation links based on user type
-  const navigationLinks = userType === 'investor' 
+  const navigationLinks = user.role === 'investor' 
     ? [
         { name: 'Dashboard', path: '/dashboard/investor' },
-        { name: 'Entrepreneurs', path: '/dashboard/entrepreneur' },
-        { name: 'My Investments', path: '/investments' },
+        // { name: 'Entrepreneurs', path: '/dashboard/entrepreneur' },
+        // { name: 'My Investments', path: '/investments' },
         { name: 'Messages', path: '/messages' },
       ]
     : [
         { name: 'Dashboard', path: '/dashboard/entrepreneur' },
-        { name: 'Investors', path: '/investors' },
-        { name: 'My Projects', path: '/projects' },
+        // { name: 'Investors', path: '/investors' },
+        // { name: 'My Projects', path: '/projects' },
         { name: 'Messages', path: '/messages' },
       ];
 
@@ -61,7 +60,7 @@ const Sidebar = () => {
           </div>
           <div className="ml-3">
             <p className="font-medium">User Name</p>
-            <p className="text-sm text-blue-300 capitalize">{userType}</p>
+            <p className="text-sm text-blue-300 capitalize">{user.role}</p>
           </div>
         </div>
       </div>
