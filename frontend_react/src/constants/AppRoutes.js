@@ -11,4 +11,5 @@ export const AppRoutes = {
     verifyEmail: BASE_URL + "api/auth/verify-email",
     resendEmail: BASE_URL + "api/auth/resend-email",
     myInfo: BASE_URL + "api/user/myInfo",
+    profile:BASE_URL + "api/user/profile",
 }
