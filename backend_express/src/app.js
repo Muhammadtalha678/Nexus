@@ -1,6 +1,7 @@
 import express from "express";
 import AuthRouter from './routers/auth.router.js'
 import UserRouter from './routers/user.router.js'
+import BusinessRouter from './routers/business.router.js'
 import cors from 'cors'
 
 const app = express()
@@ -15,5 +16,6 @@ app.get('/', (req,res) => {
 
 app.use('/api/auth',AuthRouter)
 app.use('/api/user',UserRouter)
+app.use('/api/business',BusinessRouter)
 
 export default app
