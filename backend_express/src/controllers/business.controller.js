@@ -14,8 +14,8 @@ const entrepreneurs_controller = async (req, res) => {
             return {
                 role:entrepreneur.role,
                 name: entrepreneur.name,
-                company: entrepreneur.organization,
-                pitchSummary:entrepreneur.pitchSummary || entrepreneur.bio || "Experienced investor looking for next opportunity"
+                startup:entrepreneur.startupName,
+                pitchSummary:entrepreneur.pitchSummary 
             }
         })
         return sendResponse(res, 200, false, null, {allEntrepreneur })
@@ -37,8 +37,8 @@ const investors_controller = async (req, res) => {
             return {
                 role:investor.role,
                 name: investor.name,
-                startup:investor.startupName,
-                pitchSummary:investor.pitchSummary,
+                company: entrepreneur.organization,
+                pitchSummary:investor.pitchSummary || investor.bio || "Experienced investor looking for next opportunity",
             }
         })
         return sendResponse(res, 200, false, null, {allInvestors })
