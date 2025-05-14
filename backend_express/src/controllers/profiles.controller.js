@@ -58,10 +58,8 @@ const enterpreneur_profile_controller = async (req, res) => {
             name: entrepreneur.name,
             role: entrepreneur.role,
             bio: entrepreneur.bio,
-            organization: entrepreneur.organization,
-            portfolioSize: entrepreneur.portfolioSize,
-            interests: entrepreneur.interests,
-            portfolioCompanies: entrepreneur.portfolioCompanies
+            organization: entrepreneur.startupName,
+            portfolioSize: entrepreneur.fundingGoal,
         };
 
         return sendResponse(res, 200, false, {}, { entrepreneur, message: "Entrepreneur found successfully" });
