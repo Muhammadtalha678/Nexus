@@ -12,4 +12,6 @@ export const AppRoutes = {
     resendEmail: BASE_URL + "api/auth/resend-email",
     myInfo: BASE_URL + "api/user/myInfo",
     profile:BASE_URL + "api/user/profile",
+    entrepreneurs:BASE_URL + "api/business/entrepreneurs",
+    investors:BASE_URL + "api/business/investors",
 }

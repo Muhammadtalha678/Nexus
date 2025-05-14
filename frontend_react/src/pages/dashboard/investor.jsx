@@ -1,103 +1,85 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { AppRoutes } from '../../constants/AppRoutes';
 
-/**
- * InvestorDashboard component - the main dashboard for investor users
- */
 const InvestorDashboard = () => {
-  // Mock data for the dashboard
-  const stats = [
-    { title: 'Portfolio Value', value: '$2.4M', change: '+14%' },
-    { title: 'Active Investments', value: '12', change: '+2' },
-    { title: 'New Opportunities', value: '24', change: '+5' },
-    { title: 'Unread Messages', value: '7', change: '+3' },
-  ];
+  const [entrepreneurs, setEntrepreneurs] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const entrepreneurs = [
-    { id: 1, name: 'Sarah Johnson', company: 'EcoTech Solutions', industry: 'Clean Energy', funding: '$500K' },
-    { id: 2, name: 'Michael Chen', company: 'HealthAI', industry: 'Healthcare', funding: '$1.2M' },
-    { id: 3, name: 'Olivia Rodriguez', company: 'FinEdge', industry: 'Fintech', funding: '$750K' },
-  ];
+  useEffect(() => {
+    const fetchEntrepreneurs = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('authToken');
+        const resp = await axios.get(AppRoutes.entrepreneurs, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setEntrepreneurs(resp.data?.data?.allEntrepreneur || []);
+      } catch (error) {
+        const errorData = error.response?.data?.errors || { general: 'Failed to fetch data' };
+        setErrors(errorData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEntrepreneurs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-xl font-semibold text-purple-700">Loading...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Investor Dashboard</h1>
-      
-      {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow">
-            <p className="text-sm text-gray-600">{stat.title}</p>
-            <div className="flex items-baseline mt-1">
-              <p className="text-2xl font-semibold">{stat.value}</p>
-              <span className="ml-2 text-sm text-green-600">{stat.change}</span>
+    <div className="space-y-8">
+      <h1 className="text-2xl font-bold text-purple-700">Investor Dashboard</h1>
+
+      {errors.general && (
+        <div className="text-red-500 text-sm">{errors.general}</div>
+      )}
+
+      {/* Entrepreneurs Section */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Available Entrepreneurs</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {entrepreneurs.map((entrepreneur, index) => (
+            <div key={index} className="bg-white p-6 rounded-xl shadow border space-y-3">
+              <div>
+                <p className="text-sm font-extrabold text-gray-900">Name:</p>
+                <p className="  text-gray-800">{entrepreneur.name}</p>
+              </div>
+              <div>
+                <p className="text-sm font-extrabold text-gray-900">Startup:</p>
+                <p className="text-gray-800">{entrepreneur.startup}</p>
+              </div>
+              <div>
+                <p className="text-sm font-extrabold text-gray-900">Pitch Summary:</p>
+                <p className="text-gray-800">{entrepreneur.pitchSummary}</p>
+              </div>
+              <div className="flex gap-4 pt-2">
+                <button className="text-sm px-4 py-2 bg-blue-100 text-white rounded hover:bg-blue-200 transition">
+                  View Profile
+                </button>
+                <button className="text-sm px-4 py-2 bg-purple-100 text-white rounded hover:bg-purple-200 transition">
+                  Request
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      
-      {/* Top Entrepreneurs Section */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">Top Entrepreneurs</h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Company
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Industry
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Funding Goal
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {entrepreneurs.map((entrepreneur) => (
-                <tr key={entrepreneur.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span className="font-bold text-blue-800">
-                          {entrepreneur.name.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{entrepreneur.name}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{entrepreneur.company}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{entrepreneur.industry}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{entrepreneur.funding}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button className="text-blue-600 hover:text-blue-900">View Profile</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          ))}
         </div>
       </div>
-      
+
       {/* Recent Activity Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+      <div className="bg-white rounded-lg shadow p-6 text-black">
+        <h2 className="text-lg font-semibold mb-4 text-purple-700">Recent Activity</h2>
         <div className="space-y-4">
           <div className="flex items-start">
             <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center text-green-800 font-bold">
