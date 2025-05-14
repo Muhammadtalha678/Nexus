@@ -12,6 +12,7 @@ const entrepreneurs_controller = async (req, res) => {
         let allEntrepreneur = await UserModel.find({ role: 'entrepreneur' })
         allEntrepreneur = allEntrepreneur.map((entrepreneur) => {
             return {
+                id:entrepreneur._id,
                 role:entrepreneur.role,
                 name: entrepreneur.name,
                 startup:entrepreneur.startupName,
@@ -35,6 +36,7 @@ const investors_controller = async (req, res) => {
         let allInvestors = await UserModel.find({ role: 'investor' })
         allInvestors = allInvestors.map((investor) => {
             return {
+                id:investor._id,
                 role:investor.role,
                 name: investor.name,
                 company: investor.organization,
