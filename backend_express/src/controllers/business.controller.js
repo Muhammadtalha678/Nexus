@@ -37,7 +37,7 @@ const investors_controller = async (req, res) => {
             return {
                 role:investor.role,
                 name: investor.name,
-                company: entrepreneur.organization,
+                company: investor.organization,
                 pitchSummary:investor.pitchSummary || investor.bio || "Experienced investor looking for next opportunity",
             }
         })
