@@ -27,7 +27,8 @@ const user_profile_controller = async (req,res) => {
         if (role === 'entrepreneur') {
             const updatedUser = await UserModel.findByIdAndUpdate(
               id,
-              {
+                {
+                name:update.name,
                 bio: update.bio,
                 startupName: update.startupName,
                 startupDescription: update.startupDescription,
@@ -44,6 +45,7 @@ const user_profile_controller = async (req,res) => {
             const updatedUser = await UserModel.findByIdAndUpdate(
                 id,
                 {
+                    name:update.name,
                     bio: update.bio,
                     organization: update.organization,
                     portfolioSize: update.portfolioSize,
