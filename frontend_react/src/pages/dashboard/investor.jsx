@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AppRoutes } from '../../constants/AppRoutes';
-import {Link} from 'react-router'
+import { Link } from 'react-router'
+import {useAuth} from '../../context/Authcontext'
 const InvestorDashboard = () => {
   const [entrepreneurs, setEntrepreneurs] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const [requestLoader, setRequestLoader] = useState(false);
+  const {user} = useAuth()
   useEffect(() => {
     const fetchEntrepreneurs = async () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('authToken');
-        const resp = await axios.get(AppRoutes.entrepreneurs, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setEntrepreneurs(resp.data?.data?.allEntrepreneur || []);
+        const [allEnterpreneursResp,allRequestsResp] = await Promise.all([
+           axios.get(AppRoutes.entrepreneurs, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+           axios.get(AppRoutes.getRequest, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        ])
+        // const resp = await axios.get(AppRoutes.entrepreneurs, {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
+        setRequests(allRequestsResp.data?.data?.allRequests || []);
+        setEntrepreneurs(allEnterpreneursResp.data?.data?.allEntrepreneur || []);
       } catch (error) {
         const errorData = error.response?.data?.errors || { general: 'Failed to fetch data' };
         setErrors(errorData);
@@ -28,7 +44,39 @@ const InvestorDashboard = () => {
 
     fetchEntrepreneurs();
   }, []);
+  const sendRequest = async (entrepreneurId) => {
+    try {
+      setRequestLoader(true)
+      const token = localStorage.getItem('authToken');
+      const resp = await axios.post(`${AppRoutes.sendRequest}/${entrepreneurId}`, {
+        status:"Pending"
+      }, {
+        headers:{ Authorization: `Bearer ${token}`,}
+      })
+      // console.log(resp);
+      const newRequest = resp.data?.data?.sendRequest; 
+      if (newRequest) {
+        setRequests((prev) => [...prev, newRequest]);
+      }
+    } catch (error) {
+      // console.log(error);
+        
+      const errorData = error.response?.data?.errors || { general: 'Failed to fetch investors' };
+      setErrors(errorData);
+      
+    } finally {
+      setRequestLoader(false)
+    }
+  }
 
+  const getRequestStatusForEntrepreneur = (entrepreneurId) => {
+    const request = requests.find((r) => r.enterpreneurId === entrepreneurId && r.investorId === user.id);
+    console.log(requests);
+    console.log(user);
+    
+    return request?.status || null;
+  };
+  
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -70,10 +118,40 @@ const InvestorDashboard = () => {
           className="text-blue-600 hover:underline text-sm"
         >
           View Profile
-        </Link>
-                <button className="text-sm px-4 py-2 bg-purple-100 text-white rounded hover:bg-purple-200 transition">
-                  Request
-                </button>
+                </Link>
+               
+                {(() => {
+  const status = getRequestStatusForEntrepreneur(entrepreneur.id);
+
+
+  if (status) {
+    return (
+      <span className={`text-xs font-semibold px-3 py-1 rounded ${
+        status === 'Pending' ? 'bg-yellow-400 text-white' :
+        status === 'Accepted' ? 'bg-green-500 text-white' :
+        'bg-red-500 text-white'
+      }`}>
+        {status}
+      </span>
+    );
+  }
+
+  return (
+    <button
+      className="text-sm px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+      disabled={requestLoader}
+      onClick={() => sendRequest(entrepreneur.id)}
+    >
+      {requestLoader ? (
+        <svg className="animate-spin h-5 w-5 text-white mr-2" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+      ) : "Request"}
+    </button>
+  );
+})()}
+
               </div>
             </div>
           ))}
