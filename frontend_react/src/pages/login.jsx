@@ -23,17 +23,21 @@ const Login = () => {
   const onSubmit = async (data) => {
     setServerError(null);
     try {
-      const res = await axios.post(AppRoutes.login, data); // Adjust endpoint as needed
+      // const res = await axios.post(AppRoutes.login, data); // Adjust endpoint as needed
+      const res = await axios.post('http://localhost:5000/api/auth/login', data); // Adjust endpoint as needed
+      // console.log(res);
       
-      const { accessToken, role, email } = res.data.data;
+      const { accessToken} = res.data.data;
 
       // Save token and role in localStorage
       localStorage.setItem('authToken', accessToken);
-      setUser({accessToken,role,email})
+      setUser(res.data?.data)
 
       // Navigate to role-based dashboard
-      navigate(`/dashboard/${role}`);
+      // navigate(`/dashboard/${role}`);
     } catch (err) {
+      // console.log(err);
+      
       const apiErrors = err.response?.data?.errors || {};
 
       // User is not registered
