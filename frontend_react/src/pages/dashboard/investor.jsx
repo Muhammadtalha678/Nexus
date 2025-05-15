@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AppRoutes } from '../../constants/AppRoutes';
-
+import {Link} from 'react-router'
 const InvestorDashboard = () => {
   const [entrepreneurs, setEntrepreneurs] = useState([]);
   const [errors, setErrors] = useState({});
@@ -65,9 +65,12 @@ const InvestorDashboard = () => {
                 <p className="text-gray-800">{entrepreneur.pitchSummary}</p>
               </div>
               <div className="flex gap-4 pt-2">
-                <button className="text-sm px-4 py-2 bg-blue-100 text-white rounded hover:bg-blue-200 transition">
-                  View Profile
-                </button>
+              <Link
+          to={`/profile/entrepreneur/${entrepreneur.id}`}
+          className="text-blue-600 hover:underline text-sm"
+        >
+          View Profile
+        </Link>
                 <button className="text-sm px-4 py-2 bg-purple-100 text-white rounded hover:bg-purple-200 transition">
                   Request
                 </button>
