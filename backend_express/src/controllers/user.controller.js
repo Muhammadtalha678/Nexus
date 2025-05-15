@@ -5,13 +5,13 @@ const user_controller = async (req, res) => {
     try {
         const {role } = req.user
         if (role === 'entrepreneur') {
-            const{name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl} = req.user
-            sendResponse(res, 200, false, {},{name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl})
+            const{id:_id,name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl} = req.user
+            sendResponse(res, 200, false, {},{id:_id,name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl})
             
         }
         if (role === 'investor' ){
-            const{name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies} = req.user
-            sendResponse(res, 200, false, {},{name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies})
+            const{id:_id,name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies} = req.user
+            sendResponse(res, 200, false, {},{id:_id,name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies})
             
         }
         return sendResponse(res, 400, true, { general: "Invalid user role" }, null);
