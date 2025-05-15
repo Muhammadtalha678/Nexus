@@ -41,6 +41,15 @@ const send_request_to_enterpre_controller = async (req, res) => {
             return sendResponse(res, 400, true, { general: "Status must be Pending" }, null);
                     
         }
+         // ✅ Check for existing request
+        const existingRequest = await RequestModel.findOne({
+        investorId: _id,
+        enterpreneurId: enterpreneurId
+      });
+  
+      if (existingRequest) {
+        return sendResponse(res, 409, true, { general: "Request already sent to this entrepreneur" }, null);
+      }
         const sendRequest = await RequestModel.create({
             investorId: _id,
             enterpreneurId: enterpreneurId,
