@@ -59,8 +59,41 @@ const send_request_to_enterpre_controller = async (req, res) => {
         
         return sendResponse(res, 200, false, {}, {message: "Reuest send successfully",sendRequest });
     } catch (error) {
+        return sendResponse(res, 500, true, { general: `Something went wrong: ${error.message}` }, null);
+    }
+}
+
+const approve_request_controller = async (req,res) => {
+    try {
+        const { role,_id } = req.user
+        if (role !== 'entrepreneur') {
+            return sendResponse(res, 403, true, { general: "Unauthorized access" }, null);
+        }
+        const { requestId } = req.params
+        const { status } = req.body
+        if (status !== 'Accepted') {
+            return sendResponse(res, 400, true, { general: "Status must be Accepted" }, null);
+                    
+        }
+         // ✅ Make sure the request exists and belongs to this entrepreneur
+        const existingRequest = await RequestModel.findById(requestId);
+        if (!existingRequest) {
+        return sendResponse(res, 404, true, { general: "Request not found" }, null);
+        }
+        if (existingRequest.enterpreneurId !== _id) {
+            return sendResponse(res, 403, true, { general: "You can only approve requests sent to you" }, null);
+          }
+        // ✅ Update status
+        existingRequest.status = 'Accepted';
+        await existingRequest.save();
+        return sendResponse(res, 200, false, {}, {
+            message: "Request accepted successfully",
+            updatedRequest: existingRequest,
+          });
+     } catch (error) {
+        
          return sendResponse(res, 500, true, { general: `Something went wrong: ${error.message}` }, null);
     }
 }
 
-export{get_requests_controller,send_request_to_enterpre_controller}
+export{get_requests_controller,send_request_to_enterpre_controller,approve_request_controller}
