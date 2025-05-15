@@ -80,7 +80,7 @@ const approve_request_controller = async (req,res) => {
         if (!existingRequest) {
         return sendResponse(res, 404, true, { general: "Request not found" }, null);
         }
-        if (existingRequest.enterpreneurId !== _id) {
+        if (existingRequest.enterpreneurId.toString() !== _id.toString()) {
             return sendResponse(res, 403, true, { general: "You can only approve requests sent to you" }, null);
           }
         // ✅ Update status
