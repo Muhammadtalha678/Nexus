@@ -25,6 +25,7 @@ const AuthContextProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`
                 }
             })
+            console.log(response);
             setUser(response?.data?.data)
             
         } catch (error) {
@@ -39,7 +40,13 @@ const AuthContextProvider = ({ children }) => {
             setLoading(false); //  ensure we mark loading complete
           }
     }
-    return <AuthContext.Provider value={{user,setUser,loading}}>
+    const logout = () => {
+        localStorage.removeItem('authToken');
+        setUser(null);
+        navigate('/login')
+        // window.location.href = '/login';
+      };
+    return <AuthContext.Provider value={{user,setUser,loading,logout}}>
         {children}
     </AuthContext.Provider>
 }
