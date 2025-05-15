@@ -20,5 +20,7 @@ export const AppRoutes = {
     //requests
     getRequest:BASE_URL + "api/requests", 
 
-    sendRequest:BASE_URL + "api/request" 
+    sendRequest: BASE_URL + "api/request", 
+    
+    acceptRequest:BASE_URL + "api/request" 
 }
