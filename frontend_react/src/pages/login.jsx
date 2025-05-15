@@ -23,8 +23,8 @@ const Login = () => {
   const onSubmit = async (data) => {
     setServerError(null);
     try {
-      // const res = await axios.post(AppRoutes.login, data); // Adjust endpoint as needed
-      const res = await axios.post('http://localhost:5000/api/auth/login', data); // Adjust endpoint as needed
+      const res = await axios.post(AppRoutes.login, data); // Adjust endpoint as needed
+      // const res = await axios.post('http://localhost:5000/api/auth/login', data); // Adjust endpoint as needed
       // console.log(res);
       
       const { accessToken} = res.data.data;
