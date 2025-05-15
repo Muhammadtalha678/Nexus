@@ -2,6 +2,22 @@ import { sendResponse } from '../lib/helpers/sendResponse.js'
 import RequestModel from '../models/request.model.js'
 import UserModel from '../models/user.model.js'
 import mongoose from 'mongoose'
+
+const get_requests_controller = async (req, res) => {
+    try {
+        const { role} = req.user;
+        console.log(role);
+        
+        if (role !== 'entrepreneur') {
+            return sendResponse(res, 403, true, { general: "Unauthorized access" }, null);
+        }
+        const allRequests = await RequestModel.find()
+        return sendResponse(res, 200, false, {}, {message: "Get all Requests successfully",allRequests });
+    } catch (error) {
+        return sendResponse(res, 500, true, { general: `Something went wrong: ${error.message}` }, null);
+    }
+}
+
 const send_request_to_enterpre_controller = async (req, res) => {
     try {
         const { role,_id } = req.user;
@@ -34,4 +50,4 @@ const send_request_to_enterpre_controller = async (req, res) => {
     }
 }
 
-export{send_request_to_enterpre_controller}
+export{get_requests_controller,send_request_to_enterpre_controller}
