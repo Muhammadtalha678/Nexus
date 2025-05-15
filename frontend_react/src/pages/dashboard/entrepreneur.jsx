@@ -1,40 +1,43 @@
 import axios from 'axios';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppRoutes } from '../../constants/AppRoutes';
+import { Link } from 'react-router'; // ✅ FIXED
 
 const EntrepreneurDashboard = () => {
   const [investors, setInvestors] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    const fetchInvestors  = async () => {
+    const fetchInvestors = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const token = localStorage.getItem('authToken');
-         const resp = await axios.get(AppRoutes.investors, {
+        const resp = await axios.get(AppRoutes.investors, {
           headers: {
-            Authorization:`Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
-        })
-        // console.log(resp);
+        });
         setInvestors(resp.data?.data?.allInvestors || []);
       } catch (error) {
-        const errorData = error.response?.data?.errors || { general: 'Update failed' };
+        const errorData = error.response?.data?.errors || { general: 'Failed to fetch investors' };
         setErrors(errorData);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-      
-    }
-    fetchInvestors ()
-  }, [])
+    };
+    fetchInvestors();
+  }, []);
+
   if (loading) {
-    return <h1 className="text-xl text-center text-purple-600">Loading...</h1>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-xl font-semibold text-purple-700">Loading...</div>
+      </div>
+    );
   }
-  console.log(investors);
-  
+
   return (
-    
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-purple-700">Entrepreneur Dashboard</h1>
       {errors.general && (
@@ -52,14 +55,23 @@ const EntrepreneurDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Organization</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pitch Summary</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {investors.map((investor, idx) => (
                 <tr key={idx}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{investor.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{investor.company}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{investor.pitchSummary}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{investor.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{investor.company}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{investor.pitchSummary}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <Link
+                      to={`/profile/investor/${investor.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      View Profile
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
