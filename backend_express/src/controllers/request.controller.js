@@ -8,9 +8,9 @@ const get_requests_controller = async (req, res) => {
         const { role} = req.user;
         console.log(role);
         
-        if (role !== 'entrepreneur' || role !=='investor') {
-            return sendResponse(res, 403, true, { general: "Unauthorized access" }, null);
-        }
+        // if (role !== 'entrepreneur' || role !=='investor') {
+        //     return sendResponse(res, 403, true, { general: "Unauthorized access" }, null);
+        // }
         const allRequests = await RequestModel.find()
         return sendResponse(res, 200, false, {}, {message: "Get all Requests successfully",allRequests });
     } catch (error) {
