@@ -5,9 +5,13 @@ import { AppRoutes } from "../constants/AppRoutes";
 const AuthContext = createContext()
 const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null)
-    
+    const [loading, setLoading] = useState(true); // added loading state
     useEffect(() => {
         const token = localStorage.getItem('authToken');
+        if (!token) {
+            setLoading(false);
+            return;
+          }
         console.log("Auth context useEffect run when page refresh by f5", user, token);
         if (token && !user) {
             get_user_info(token)        
@@ -31,9 +35,11 @@ const AuthContextProvider = ({ children }) => {
                 setUser(null)
             }
             
-        }
+        }finally {
+            setLoading(false); //  ensure we mark loading complete
+          }
     }
-    return <AuthContext.Provider value={{user,setUser}}>
+    return <AuthContext.Provider value={{user,setUser,loading}}>
         {children}
     </AuthContext.Provider>
 }
