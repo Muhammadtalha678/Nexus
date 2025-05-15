@@ -35,12 +35,16 @@ const send_request_to_enterpre_controller = async (req, res) => {
         const findEnterreneur = await UserModel.findById(enterpreneurId)
         if (!findEnterreneur || findEnterreneur.role !== 'entrepreneur') {
                     return sendResponse(res, 404, true, { general: "Entrepreneur not found" }, null);
+                }
+                const {status} = req.body
+        if (status !== 'Pending') {
+            return sendResponse(res, 400, true, { general: "Status must be Pending" }, null);
+                    
         }
-        
         const sendRequest = await RequestModel.create({
             investorId: _id,
             enterpreneurId: enterpreneurId,
-            status:"Pending"
+            status:status
         })
         
         
