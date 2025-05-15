@@ -104,6 +104,7 @@ const login_controller = async (req, res) => {
         }
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid) return sendResponse(res, 401, true, { email: "Invalid email or password" }, null);
+        
         const accessToken = generateAccessToken({ id: user._id, email: user.email, role: user.role })
         if (user.role === 'entrepreneur') {
                     const{id:_id,name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl} = user
@@ -111,7 +112,8 @@ const login_controller = async (req, res) => {
                     return sendResponse(res,200,false,{},{id:_id,name,email,role,bio,startupName,startupDescription,pitchSummary,fundingGoal,pitchDeckUrl,accessToken,message:"User Login Successfully"})
                     
                 }
-                if (role === 'investor' ){
+                // console.log(user);
+                if (user.role === 'investor' ){
                     const{id:_id,name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies} = user
                     
                     return sendResponse(res, 200, false, {}, { id:_id,name,email,role,bio,organization,portfolioSize,interests,portfolioCompanies, accessToken, message: "User Login Successfully" })
