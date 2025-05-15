@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-
+import {useAuth} from '../../context/Authcontext'
+import {useNavigate } from 'react-router'
 /**
  * Navbar component for the dashboard layout
  * Contains notification bell, search bar, and user profile menu
  */
 const Navbar = () => {
+  const {logout} = useAuth()
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const navigate = useNavigate()
 
   return (
     <header className="bg-white shadow-sm px-6 py-3">
@@ -99,7 +102,10 @@ const Navbar = () => {
                   >
                     Settings
                   </Link>
-                  <button
+                  <button onClick={() => {
+                    logout()
+                    navigate('/login')
+                  }}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                   >
