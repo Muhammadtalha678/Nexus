@@ -18,5 +18,7 @@ export const AppRoutes = {
     enterpreneurProfile: BASE_URL + "api/profile/enterpreneur",
     
     //requests
+    getRequest:BASE_URL + "api/requests", 
+
     sendRequest:BASE_URL + "api/request" 
 }
