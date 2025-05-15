@@ -14,4 +14,6 @@ export const AppRoutes = {
     profile:BASE_URL + "api/user/profile",
     entrepreneurs:BASE_URL + "api/business/entrepreneurs",
     investors:BASE_URL + "api/business/investors",
+    investorProfile:BASE_URL + "api/profile/investor",
+    enterpreneurProfile:BASE_URL + "api/profile/enterpreneur",
 }
